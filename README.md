@@ -23,7 +23,47 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Elevyn Shop Backend - A NestJS-based ecommerce API with PostgreSQL database using Drizzle ORM.
+
+## Tech Stack
+
+- **Framework**: NestJS with Fastify adapter
+- **Database**: PostgreSQL 16
+- **ORM**: Drizzle ORM
+- **Logging**: Pino
+
+## Database Schema
+
+The application uses Drizzle ORM with PostgreSQL. Schema files are located in `src/database/`.
+
+### Entities
+
+| Entity           | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| `users`          | Customer accounts with authentication fields    |
+| `refresh_tokens` | JWT refresh tokens for session management       |
+| `categories`     | Hierarchical product categories                 |
+| `products`       | Product catalog with pricing, inventory, images |
+| `addresses`      | User shipping/billing addresses                 |
+| `cart_items`     | Shopping cart items                             |
+| `orders`         | Order records with status and totals            |
+| `order_items`    | Individual line items per order                 |
+
+### Database Commands
+
+```bash
+# Generate migrations from schema changes
+yarn db:generate
+
+# Run pending migrations
+yarn db:migrate
+
+# Push schema directly to database (development)
+yarn db:push
+
+# Open Drizzle Studio (database GUI)
+yarn db:studio
+```
 
 ## Project setup
 
