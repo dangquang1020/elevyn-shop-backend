@@ -14,6 +14,8 @@ async function bootstrap() {
     { bufferLogs: true },
   );
   app.useLogger(app.get(Logger));
+  app.setGlobalPrefix('api');
+
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3001;
   await app.listen(port, '0.0.0.0');
