@@ -6,10 +6,25 @@ import { AppService } from './app.service';
 import { IncomingMessage } from 'http';
 import crypto from 'crypto';
 import { ServerResponse } from 'http';
+import { databaseConfig, jwtConfig } from './config';
+import { DatabaseModule } from './database';
+import {
+  UsersModule,
+  AuthModule,
+  CatalogModule,
+  CartModule,
+  OrdersModule,
+} from './modules';
+
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/auth/guards';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig, jwtConfig],
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport:
@@ -44,13 +59,24 @@ import { ServerResponse } from 'http';
           }),
           res: (res: ServerResponse<IncomingMessage>) => ({
             statusCode: res.statusCode,
-            // headers: res.headers,
           }),
         },
       },
     }),
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    CatalogModule,
+    CartModule,
+    OrdersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

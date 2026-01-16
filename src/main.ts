@@ -6,6 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
+import { HttpExceptionFilter } from './common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -15,6 +16,7 @@ async function bootstrap() {
   );
   app.useLogger(app.get(Logger));
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3001;

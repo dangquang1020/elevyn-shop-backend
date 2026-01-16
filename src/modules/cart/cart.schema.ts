@@ -7,7 +7,7 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { users } from '../auth/auth.schema';
+import { users } from '../users/users.schema';
 import { products } from '../catalog/catalog.schema';
 
 // ============================================================================

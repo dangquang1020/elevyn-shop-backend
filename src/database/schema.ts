@@ -5,11 +5,15 @@
  * Each module maintains its own schema definitions close to the code that uses them.
  *
  * Module structure:
- * - auth: users, refresh_tokens
+ * - users: users, addresses
+ * - auth: refresh_tokens
  * - catalog: categories, products
  * - cart: cart_items
- * - orders: addresses, orders, order_items
+ * - orders: orders, order_items
  */
+
+// Users module (must be first - other modules depend on it)
+export * from '../modules/users/users.schema';
 
 // Auth module
 export * from '../modules/auth/auth.schema';

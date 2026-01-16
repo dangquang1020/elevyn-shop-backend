@@ -2,7 +2,6 @@ import {
   pgTable,
   uuid,
   varchar,
-  boolean,
   timestamp,
   decimal,
   integer,
@@ -11,7 +10,7 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { users } from '../auth/auth.schema';
+import { users, addresses } from '../users/users.schema';
 import { products } from '../catalog/catalog.schema';
 
 // ============================================================================
@@ -27,31 +26,6 @@ export const orderStatusEnum = pgEnum('order_status', [
   'cancelled',
   'refunded',
 ]);
-
-// ============================================================================
-// ADDRESSES TABLE
-// ============================================================================
-
-export const addresses = pgTable(
-  'addresses',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    userId: uuid('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    label: varchar('label', { length: 50 }),
-    street: varchar('street', { length: 255 }).notNull(),
-    city: varchar('city', { length: 100 }).notNull(),
-    state: varchar('state', { length: 100 }),
-    postalCode: varchar('postal_code', { length: 20 }).notNull(),
-    country: varchar('country', { length: 100 }).notNull(),
-    isDefault: boolean('is_default').default(false).notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [index('addresses_user_id_idx').on(table.userId)],
-);
 
 // ============================================================================
 // ORDERS TABLE
@@ -115,13 +89,6 @@ export const orderItems = pgTable(
 // ============================================================================
 // RELATIONS
 // ============================================================================
-
-export const addressesRelations = relations(addresses, ({ one }) => ({
-  user: one(users, {
-    fields: [addresses.userId],
-    references: [users.id],
-  }),
-}));
 
 export const ordersRelations = relations(orders, ({ one, many }) => ({
   user: one(users, {

@@ -8,30 +8,7 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-
-// ============================================================================
-// USERS TABLE
-// ============================================================================
-
-export const users = pgTable(
-  'users',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    email: varchar('email', { length: 255 }).notNull(),
-    passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-    firstName: varchar('first_name', { length: 100 }),
-    lastName: varchar('last_name', { length: 100 }),
-    phone: varchar('phone', { length: 20 }),
-    isVerified: boolean('is_verified').default(false).notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [uniqueIndex('users_email_idx').on(table.email)],
-);
+import { users } from '../users/users.schema';
 
 // ============================================================================
 // REFRESH TOKENS TABLE
@@ -61,12 +38,8 @@ export const refreshTokens = pgTable(
 );
 
 // ============================================================================
-// RELATIONS (defined after all tables to avoid circular imports)
+// RELATIONS
 // ============================================================================
-
-export const usersRelations = relations(users, ({ many }) => ({
-  refreshTokens: many(refreshTokens),
-}));
 
 export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
   user: one(users, {
